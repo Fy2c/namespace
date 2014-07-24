@@ -4,14 +4,14 @@ Namespace
 This is designed to create namespace painlessly, while it will also helps in avoiding code not being loaded within different namespace, like the example shown below.
 
 ```javascript
-// this will run in parsing phrase
-function Module(){ };
-
-// this will run in runtime
-var Module = function(){};
-
-//by using namespace require we can avoid script like the following:
-var Module = (function(){})();
+    // this will run in parsing phrase
+    function Module(){ };
+    
+    // this will run in runtime
+    var Module = function(){};
+    
+    //by using namespace require we can avoid script like the following:
+    var Module = (function(){})();
 ```
 
 Basic usage
