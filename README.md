@@ -26,7 +26,7 @@ Basic usage
 ```
 
 Dependency usage
---------------
+----------------
 
 ```javascript
     // Base model
@@ -60,6 +60,20 @@ Dependency usage
         }
     });
 
-    antz.module.schedule.newFunction() // "Hello World, can't touch me!"
+    antz.module.schedule.newFunction()  // "Hello World, can't touch me!"
+    
+```
+
+Nested namespace usage
+----------------------
+```javascript
+
+    // Import/Require model.base namespace
+    // ===========================================
+    var schedule = antz.namespace('module.schedule');
+    var scheduleUI = schedule.namespace('ui');
+    
+    schedule === antz.module.schedule;      // true
+    scheduleUI === antz.module.schedule.ui  //true
     
 ```
