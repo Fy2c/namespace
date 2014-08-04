@@ -17,17 +17,13 @@
         'use strict';
 
         var root_obj = window[path] = window[path] || {};
-
+        root_obj.namespace = runNamespace;  // no point in creating a new Child Instance for this.
+        
         function Child(){};
-
-        if(root_obj)
-            root_obj.namespace = runNamespace;
-        else
-            root_obj = window[path] = new Child();
 
         function importNamespace(ns, ns_child) {
             var parts = ns.split('.')
-              , namespace = ns_child || root_obj;
+              , namespace = (parts[0] === path) ? root_obj : (ns_child || root_obj);
 
             var i = (parts[0] === path)? 1 : 0;
 
