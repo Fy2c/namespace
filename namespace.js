@@ -5,43 +5,46 @@
     * @return {Object} an object pointing to the namespace
     *
     * Example :
-    *   var ns = antz.namespace('antz.module.Booking');
-    *   var ui = ns.namespace('ui');
+    *   var nsFullPath = antz.namespace('antz.module.Booking');
+    *   var ui = nsFullPath.namespace('ui');
     *
-    *   ns === antz.module.Booking;     // true
+    *   nsFullPath === antz.module.Booking;     // true
     *   ui === antz.module.Booking.ui;  // true
     *
-    *   ns.NewClass = function(){ };
+    *   nsFullPath.NewClass = function(){ };
     */
-    (function(path){
+    (function(nsRootName){
         'use strict';
 
-        var root_obj = window[path] = window[path] || {};
-        root_obj.namespace = runNamespace;  // no point in creating a new Child Instance for this.
+        var rootObj = window[nsRootName] = window[nsRootName] || {};
+        rootObj.namespace = runNamespace;  // in case there is an object for this.
         
         function Child(){};
 
-        function importNamespace(ns, ns_child) {
-            var parts = ns.split('.')
-              , namespace = (parts[0] === path) ? root_obj : (ns_child || root_obj);
+        function NamespaceBuilder(nsFullPath, nsChild) {
+            var nsNode = nsFullPath.split('.')
+              , usesRoot = (nsNode[0] === nsRootName)
+              , isGlobal = (nsNode[0] === 'window')
+              , isParent = (isGlobal && nsNode[1] === 'parent') || (nsNode[0] === 'parent')
+              , node = (usesRoot) ? rootObj : (isParent) ? window.parent : (isGlobal) ? window : nsChild;
 
-            var i = (parts[0] === path)? 1 : 0;
+            var i = (isGlobal && isParent) ? 2 : (usesRoot || isParent) ? 1 : 0;  
 
-            for (var len = parts.length; i < len; i++) {
-                var _child = parts[i];
-                if(!_child) break;
-                namespace = ( namespace[_child] = namespace[_child] || new Child() );
+            for (var len = nsNode.length; i < len; i++) {
+                var _node = nsNode[i];
+                if(!_node) break;
+                node = ( node[_node] = node[_node] || {} );
+                if(typeof node[_node] !== 'object') return;
+                if(!node.namespace) node.namespace = runNamespace;
             }
 
-            return namespace;
+            return node;
         }
 
-        function runNamespace(ns_string, get_ns){
-            var exportNamspace = importNamespace(ns_string, this);
-            if(get_ns) get_ns(exportNamspace, importNamespace);
-            return exportNamspace;
+        function runNamespace(nsPath, importNamespace){
+            var exportNamespace = NamespaceBuilder(nsPath, this);
+            if(importNamespace) importNamespace(exportNamespace, NamespaceBuilder);
+            return exportNamespace;
         }
-
-        Child.prototype.namespace = runNamespace
 
     }("antz"));
