@@ -34,7 +34,7 @@
                 var _node = nsNode[i];
                 if(!_node) break;
                 node = ( node[_node] = node[_node] || {} );
-                if(typeof node !== 'object') return;
+                if(typeof node !== 'object') break;
                 if(!node.namespace) node.namespace = runNamespace;
             }
 
