@@ -19,8 +19,6 @@
         var rootObj = window[nsRootName] = window[nsRootName] || {};
         rootObj.namespace = runNamespace;  // in case there is an object for this.
         
-        function Child(){};
-
         function NamespaceBuilder(nsFullPath, nsChild) {
             var nsNode = nsFullPath.split('.')
               , usesRoot = (nsNode[0] === nsRootName)
